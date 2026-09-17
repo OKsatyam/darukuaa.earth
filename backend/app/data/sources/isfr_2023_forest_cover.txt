@@ -1,0 +1,14 @@
+TITLE: India State of Forest Report (ISFR) 2023
+SOURCE: Forest Survey of India, Ministry of Environment, Forest and Climate Change, Government of India (2023).
+REGION: National (India), state-wise breakdown.
+
+SUMMARY:
+The ISFR 2023 is India's official biennial forest and tree cover assessment. Total forest and tree cover stands at 827,357 sq km (25.17% of India's geographical area), split into forest cover (715,343 sq km, 21.76%) and tree cover outside forest (112,014 sq km, 3.41%). This represents an increase of 1,445 sq km since 2021 (156 sq km forest cover, 1,289 sq km tree cover).
+
+State-wise: the largest increases in forest and tree cover (2021-2023) were recorded in Chhattisgarh (684 sq km), Uttar Pradesh (559 sq km) and Odisha (559 sq km). The states with the largest total forest cover are Madhya Pradesh (77,073 sq km), Arunachal Pradesh (65,882 sq km) and Chhattisgarh (55,812 sq km).
+
+Mangrove cover stands at 4,992 sq km. Total forest carbon stock is 7,285.5 million tonnes, an increase of 81.5 million tonnes since 2021. Bamboo-bearing area covers 154,670 sq km, up 5,227 sq km since 2021.
+
+A notable caution flagged by forest researchers analyzing ISFR 2023 data: much of the reported "increase" in tree cover comes from plantations (monoculture or limited-species) rather than natural, biodiverse forest — plantation expansion is flagged as a potential threat to natural ecosystem quality even as raw cover numbers rise.
+
+RELEVANCE: Provides the land-use/land-cover baseline for India, and the important nuance that raw forest-cover growth does not automatically mean biodiversity gain — land-use type (natural vs. plantation/monoculture) matters as much as land-use extent.

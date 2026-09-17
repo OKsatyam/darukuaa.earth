@@ -1,0 +1,14 @@
+TITLE: Economic benefits of animal pollination to Indian agriculture
+SOURCE: Chaudhary, O.P. & Chand, R. (2017). Indian Journal of Agricultural Sciences, 87(9), 1117-1138. (ICAR)
+REGION: National (India), crop-sector level, 2012-13 prices.
+
+SUMMARY:
+This ICAR-published analysis quantifies how dependent Indian agriculture is on animal (mostly insect) pollination, across 211 major crops.
+
+Dependency: 51.2% of the 211 crops analyzed depend on animal pollination to some degree. 6.6% are "essentially dependent" (90-100% production loss without pollinators); 16.1% show "great" dependence; 13.7% "moderate"; 14.7% "little."
+
+Economic value: The direct annual contribution of animal pollination to Indian agriculture is estimated at ₹112,615.73 crore (~US$22.52 billion), or 8.72% of total agricultural value. Animal-pollinated crops as a whole are valued at ₹422,827.52 crore (~US$84.57 billion) — 32.74% of India's total agricultural value of ₹291,369.63 crore (~US$258.27 billion equivalent basis as reported).
+
+Sector breakdown (value attributable to pollination): oilseeds ₹43,993.08 crore (34.07% of oilseed yield value), vegetables ₹19,498.20 crore (11.10%), fruits ₹17,095.45 crore (14.82%), cotton/fibers ₹17,290.66 crore (23.39%), condiments/spices ₹10,109.43 crore (25.47%). Rapeseed and mustard is the single most pollinator-dependent crop by value (₹19,355.70 crore).
+
+RELEVANCE: This is the strongest available India-specific, hard-number link between pollinator/biodiversity health and direct economic (crop yield) outcomes — critical for the pollinator-presence → crop-yield and pollinator-presence → biodiversity connections.

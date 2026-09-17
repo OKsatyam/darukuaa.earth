@@ -1,0 +1,16 @@
+TITLE: Spatio-Temporal Changes in Forest Cover and Forest Fragmentation in the Northern Western Ghats
+SOURCE: Badhe, Y.P. et al. (2024). International Journal of Ecology and Environmental Sciences, 50(1): 147-155.
+REGION: Northern Western Ghats, India — study sites: Anjaneri, Panchgani, Kas Plateau.
+STUDY PERIOD: 1989-2015 (26 years).
+
+SUMMARY:
+Using the Landscape Fragmentation Tool (100m edge-width threshold), this study classified forest into core (further split by patch size), edge, perforated and patch categories across three Western Ghats sites, tracking change over 26 years.
+
+Findings by site:
+- Anjaneri: non-forest area increased 21%, core forest decreased 15%.
+- Panchgani: non-forest area increased 29% (most severe), core forest decreased 14%.
+- Kas Plateau: non-forest area increased 14%, core forest declined 18% overall, with core forest specifically reduced by 26.37% by 2015.
+
+Across all three sites, the pattern was consistent: land-use conversion (agriculture, monoculture plantation, settlement expansion) steadily converted core, contiguous forest into edge and patch forest — i.e., fragmentation. The authors note that fragmented forest edges become "more vulnerable," reporting increased incidence of invasive species and human-wildlife conflict as a direct consequence of fragmentation.
+
+RELEVANCE: Provides a real, quantified India example of the land-use → habitat fragmentation → species/biodiversity decline chain, with hard percentage figures over a multi-decade period, directly usable for a "monoculture/land-use change" recommendation scenario.

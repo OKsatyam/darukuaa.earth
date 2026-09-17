@@ -1,0 +1,122 @@
+"""
+RAG knowledge layer: chunks the curated source documents (app/data/sources/*.txt),
+embeds them with sentence-transformers, and stores them in a persistent ChromaDB
+collection. Retrieval returns chunks WITH their source metadata so the API can
+surface a "sources used" panel (retrieval transparency) rather than hiding the
+knowledge step inside an opaque LLM call.
+"""
+import os
+import glob
+import chromadb
+from chromadb.utils import embedding_functions
+
+from app.config import settings
+
+SOURCES_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "sources")
+COLLECTION_NAME = "darukaa_knowledge"
+EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+
+
+def _chunk_text(text: str, source_file: str) -> list[dict]:
+    """
+    Paragraph-based chunking. The source docs are already written as short,
+    self-contained paragraphs (title/source/region header + one paragraph per
+    finding), so splitting on blank lines keeps each chunk coherent instead of
+    cutting a stat off from the sentence that explains it.
+    """
+    raw_paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
+    chunks = []
+    # Keep the header block (TITLE/SOURCE/REGION) attached to every chunk from
+    # this file so a retrieved chunk is still self-explanatory on its own.
+    header_lines = [l for l in raw_paragraphs[0].split("\n")] if raw_paragraphs else []
+    header = "\n".join(header_lines)
+
+    for i, para in enumerate(raw_paragraphs[1:], start=1):
+        chunks.append(
+            {
+                "id": f"{source_file}::chunk_{i}",
+                "text": f"{header}\n\n{para}",
+                "source_file": source_file,
+            }
+        )
+    return chunks
+
+
+def load_and_chunk_sources() -> list[dict]:
+    chunks = []
+    for path in sorted(glob.glob(os.path.join(SOURCES_DIR, "*.txt"))):
+        source_file = os.path.basename(path)
+        with open(path, "r", encoding="utf-8") as f:
+            text = f.read()
+        chunks.extend(_chunk_text(text, source_file))
+    return chunks
+
+
+def get_chroma_client():
+    return chromadb.PersistentClient(path=settings.chroma_persist_dir)
+
+
+def build_index(force_rebuild: bool = False):
+    """Run once at startup (or via a CLI command) to (re)populate the collection."""
+    client = get_chroma_client()
+    embed_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
+        model_name=EMBEDDING_MODEL
+    )
+
+    existing = [c.name for c in client.list_collections()]
+    if COLLECTION_NAME in existing:
+        if not force_rebuild:
+            return client.get_collection(COLLECTION_NAME, embedding_function=embed_fn)
+        client.delete_collection(COLLECTION_NAME)
+
+    collection = client.create_collection(COLLECTION_NAME, embedding_function=embed_fn)
+
+    chunks = load_and_chunk_sources()
+    if not chunks:
+        return collection
+
+    collection.add(
+        ids=[c["id"] for c in chunks],
+        documents=[c["text"] for c in chunks],
+        metadatas=[{"source_file": c["source_file"]} for c in chunks],
+    )
+    return collection
+
+
+def retrieve(query: str, top_k: int = 3) -> list[dict]:
+    """
+    Returns a list of {text, source_file, distance} — the raw retrieval result.
+    Callers (the LangGraph flow) are responsible for deciding whether a result
+    is relevant enough to use (see guardrails.py's no-match-no-claim check),
+    never for inventing content when nothing relevant comes back.
+    """
+    client = get_chroma_client()
+    embed_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
+        model_name=EMBEDDING_MODEL
+    )
+    try:
+        collection = client.get_collection(COLLECTION_NAME, embedding_function=embed_fn)
+    except ValueError:
+        collection = build_index()
+
+    results = collection.query(query_texts=[query], n_results=top_k)
+
+    hits = []
+    docs = results.get("documents", [[]])[0]
+    metas = results.get("metadatas", [[]])[0]
+    dists = results.get("distances", [[]])[0]
+    for text, meta, dist in zip(docs, metas, dists):
+        hits.append(
+            {
+                "text": text,
+                "source_file": meta.get("source_file"),
+                "distance": dist,
+            }
+        )
+    return hits
+
+
+if __name__ == "__main__":
+    # `python -m app.services.rag` — builds/rebuilds the index from source files.
+    col = build_index(force_rebuild=True)
+    print(f"Indexed collection '{COLLECTION_NAME}' with {col.count()} chunks.")

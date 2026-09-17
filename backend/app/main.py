@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers import chat
+from app import db
 
 app = FastAPI(
     title="Darukaa Biodiversity Intelligence API",
@@ -17,6 +18,11 @@ app.add_middleware(
 )
 
 app.include_router(chat.router, prefix="/api", tags=["chat"])
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    await db.close_client()
 
 
 @app.get("/health")

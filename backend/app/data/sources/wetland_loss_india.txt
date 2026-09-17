@@ -1,0 +1,12 @@
+TITLE: Wetland loss and biodiversity decline in India
+SOURCE: Synthesis of Indian wetland-loss research, reported via Mongabay-India (2024), drawing on studies covering 1940-2014.
+REGION: National (India), with Chennai-specific data.
+
+SUMMARY:
+India lost approximately one-third of its natural wetlands between 1940 and 2014, primarily to urbanization and land conversion. Chennai is a particularly severe case: around 85% of the city's wetlands have degraded due to rapid urban expansion.
+
+Wetlands are critical breeding, feeding and refuge habitat for a large share of freshwater and migratory species. Their loss directly reduces water availability for dependent ecosystems and is described by researchers as "an early warning sign" of broader biodiversity decline — wetland-dependent species show population impacts well before terrestrial species in the same region, making wetland extent a useful leading indicator.
+
+Globally, wild vertebrate populations declined 73% between 1970 and 2020 (WWF Living Planet framework), with the Asia-Pacific region specifically showing a 1.8% annual population decline — context for how water-availability pressure compounds with other drivers.
+
+RELEVANCE: Supports the water_availability → species_survival connection with a concrete, India-specific, multi-decade figure (one-third of wetlands lost), rather than relying on a global average that may not reflect Indian conditions.

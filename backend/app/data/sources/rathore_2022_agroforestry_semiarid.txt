@@ -1,0 +1,15 @@
+TITLE: Integrated agroforestry systems improve soil carbon storage, water productivity, and economic returns in the marginal land of the semi-arid region
+SOURCE: Rathore, S.S., Babu, S., El-Sappah, A.H. et al. (2022). Saudi Journal of Biological Sciences, 29(10):103427.
+REGION: ICAR-Indian Agricultural Research Institute (IARI), New Delhi, India (28.40°N, 77.12°E) — semi-arid, 650mm mean annual rainfall.
+STUDY PERIOD: 2015-2018 (3 years).
+
+SUMMARY:
+This field trial compared integrated agroforestry systems (fruit shrubs such as Phalsa, Moringa and Karonda intercropped with seasonal vegetables/legumes) against a conventional fallow-monoculture wheat/mustard baseline on marginal semi-arid land in northern India.
+
+Soil organic carbon: Phalsa- and Moringa-based agroforestry systems raised soil organic carbon (SOC) density to 9.10-9.16 Mg/ha in the 0-15cm layer, with a sequestration rate of 0.48-0.73 Mg/ha/year — a substantial improvement over the degraded monoculture baseline (which measured around 0.30-0.34% SOC). Higher SOC directly increases microbial biomass and activity, which in turn supports flowering plant diversity and pollinator habitat.
+
+Water productivity: Agroforestry systems achieved water-use efficiency up to 19.10 kg/ha-mm and irrigation water-use efficiency up to 88.33 kg/ha-mm — meaning more yield was produced per unit of water applied, which matters directly for low-rainfall semi-arid regions.
+
+Economic returns: The Karonda + mung bean-potato system achieved net returns of US$3,529.1/ha, 96.7% higher than the fallow-mustard baseline (US$633.5/ha), with a benefit-cost ratio up to 3.85:1. System productivity for Phalsa + mung bean-potato reached 25.9 Mg/ha versus 1.9 Mg/ha for fallow-mustard.
+
+RELEVANCE: This is a close real-world match to a common Indian scenario — low soil organic carbon, low rainfall, semi-arid region, monoculture cropping — and demonstrates that agroforestry/intercropping is not just an ecological recommendation but also improves farmer income, making it a practical, adoptable intervention.
