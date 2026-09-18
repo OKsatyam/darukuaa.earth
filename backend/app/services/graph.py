@@ -16,6 +16,7 @@ from langgraph.graph import StateGraph, END
 from app.services import connections as conn
 from app.services import guardrails as gr
 from app.services import rag
+from app.services import narration
 
 
 class ChatState(TypedDict, total=False):
@@ -37,7 +38,14 @@ def validate_node(state: ChatState) -> ChatState:
     message = state.get("message", "") or ""
     structured = state.get("structured", {}) or {}
 
-    if not gr.is_in_domain(message) and not structured:
+    # Domain-lock check must run on THIS turn's message whenever there is one —
+    # not skipped just because land_data happens to be non-empty from an
+    # earlier turn in the same session. Bug this fixed: after land data was
+    # captured once, every later off-topic message (e.g. "capital of france")
+    # slipped past the guardrail because `structured` was already populated,
+    # then fell through with no reply_text at all (see detect_and_check_node
+    # fix below) — the chat box would show a blank bubble.
+    if message and not gr.is_in_domain(message):
         state["valid"] = False
         state["guardrail_notice"] = (
             "That's outside what I can help with — I only reason about soil, land use, "
@@ -73,6 +81,14 @@ def detect_and_check_node(state: ChatState) -> ChatState:
             "That's what I need to give you a grounded recommendation rather than a generic one."
         )
         state["reply_text"] = state["clarifying_question"]
+    elif not cause:
+        # Enough categories are already filled in (missing == []) but this
+        # message still doesn't match any known cause — e.g. all land data was
+        # given in an earlier turn and this turn's text is unrelated/unknown.
+        # This is guardrail 2 (no-match-no-claim): say so explicitly instead
+        # of silently returning no reply_text at all, which is what produced
+        # the blank chat bubbles.
+        state["reply_text"] = gr.no_match_message()
 
     return state
 
@@ -148,7 +164,16 @@ def compose_node(state: ChatState) -> ChatState:
         ],
     }
 
-    reply_lines = [f"**{action}**", "", explanation]
+    # LLM narration (optional, Groq): rephrases `explanation` into more
+    # natural prose for the CHAT BUBBLE only. `recommendation.explanation`
+    # above is already finalized and stays the deterministic, source-cited
+    # text regardless — narration can never change what was actually
+    # concluded, only how the reply_text reads. Falls back to the
+    # deterministic explanation on any failure (see narration.py).
+    narrated = narration.narrate(explanation)
+    display_explanation = narrated or explanation
+
+    reply_lines = [f"**{action}**", "", display_explanation]
     if notice:
         reply_lines.append("")
         reply_lines.append(f"_{notice}_")

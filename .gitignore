@@ -1,16 +1,19 @@
-# Python
-__pycache__/
-*.pyc
-.venv/
-venv/
-chroma_store/
-.env
 
 # Node
-node_modules/
-.next/
-out/
-
 # OS
+# Python
+*.pyc
 .DS_Store
+.env
+.next/
+.venv/
 Thumbs.db
+__pycache__/
+chroma_store/
+frontend/.next/
+frontend/node_modules/
+node_modules/
+out/
+venv/
+*.tsbuildinfo
+frontend/.env.local

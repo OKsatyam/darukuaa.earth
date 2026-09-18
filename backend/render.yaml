@@ -1,0 +1,20 @@
+# Render "Blueprint" — lets you deploy by pointing Render at the repo root
+# and it auto-detects this file, instead of clicking through the manual
+# web-service form. Root directory for this service is `backend/`.
+services:
+  - type: web
+    name: darukaa-biodiversity-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB_NAME
+        value: darukaa
+      - key: CHROMA_PERSIST_DIR
+        value: ./chroma_store
+      - key: ALLOWED_ORIGINS
+        sync: false

@@ -89,31 +89,42 @@ def retrieve(query: str, top_k: int = 3) -> list[dict]:
     Callers (the LangGraph flow) are responsible for deciding whether a result
     is relevant enough to use (see guardrails.py's no-match-no-claim check),
     never for inventing content when nothing relevant comes back.
+
+    Deliberately fault-tolerant: the reasoning chain (connections.json) is the
+    system's primary source of truth — RAG is a supplementary evidence layer.
+    If the embedding model/network/DB isn't reachable, that should degrade to
+    "no extra sources shown" (empty list), never take down the whole
+    /api/chat response. A no-match-no-claim guardrail failure and a network
+    hiccup are different things and shouldn't look the same to the caller,
+    but neither should crash the request.
     """
-    client = get_chroma_client()
-    embed_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
-        model_name=EMBEDDING_MODEL
-    )
     try:
-        collection = client.get_collection(COLLECTION_NAME, embedding_function=embed_fn)
-    except ValueError:
-        collection = build_index()
-
-    results = collection.query(query_texts=[query], n_results=top_k)
-
-    hits = []
-    docs = results.get("documents", [[]])[0]
-    metas = results.get("metadatas", [[]])[0]
-    dists = results.get("distances", [[]])[0]
-    for text, meta, dist in zip(docs, metas, dists):
-        hits.append(
-            {
-                "text": text,
-                "source_file": meta.get("source_file"),
-                "distance": dist,
-            }
+        client = get_chroma_client()
+        embed_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
+            model_name=EMBEDDING_MODEL
         )
-    return hits
+        try:
+            collection = client.get_collection(COLLECTION_NAME, embedding_function=embed_fn)
+        except ValueError:
+            collection = build_index()
+
+        results = collection.query(query_texts=[query], n_results=top_k)
+
+        hits = []
+        docs = results.get("documents", [[]])[0]
+        metas = results.get("metadatas", [[]])[0]
+        dists = results.get("distances", [[]])[0]
+        for text, meta, dist in zip(docs, metas, dists):
+            hits.append(
+                {
+                    "text": text,
+                    "source_file": meta.get("source_file"),
+                    "distance": dist,
+                }
+            )
+        return hits
+    except Exception:
+        return []
 
 
 if __name__ == "__main__":

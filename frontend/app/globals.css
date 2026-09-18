@@ -1,0 +1,47 @@
+:root {
+  --forest-dark: #1e2e1b;
+  --forest: #2f5233;
+  --forest-soft: #e7efe4;
+  --terracotta: #c1502e;
+  --terracotta-soft: #f5e2da;
+  --rust: #8a5a3c;
+  --paper: #faf7f1;
+  --ink: #21261f;
+  --ink-soft: #5b6156;
+  --border: #ddd6c7;
+  --chip-brown: #8a5a3c;
+  --chip-green: #4a7a4e;
+  --chip-rust: #b3562f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+body {
+  font-family: "Work Sans", system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: "Fraunces", Georgia, serif;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: var(--forest);
+}
