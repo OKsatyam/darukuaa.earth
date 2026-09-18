@@ -25,9 +25,16 @@ from app.config import settings
 
 logger = logging.getLogger("darukaa.narration")
 
+# gpt-oss-20b is a reasoning model: it spends some of max_tokens on an
+# internal "reasoning" field before writing the final "content". With too
+# small a budget, reasoning eats the whole allowance and content comes back
+# empty (confirmed live). reasoning_effort="low" plus a generous max_tokens
+# keeps that budget mostly for the actual rephrased answer.
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
-GROQ_MODEL = "llama-3.1-8b-instant"
-TIMEOUT_SECONDS = 6.0
+GROQ_MODEL = "openai/gpt-oss-20b"
+GROQ_REASONING_EFFORT = "low"
+GROQ_MAX_TOKENS = 300
+TIMEOUT_SECONDS = 8.0
 
 SYSTEM_PROMPT = (
     "You rephrase an already-verified ecological reasoning explanation into "
@@ -64,7 +71,8 @@ def narrate(deterministic_text: str) -> str | None:
                     {"role": "user", "content": deterministic_text},
                 ],
                 "temperature": 0.3,
-                "max_tokens": 300,
+                "max_tokens": GROQ_MAX_TOKENS,
+                "reasoning_effort": GROQ_REASONING_EFFORT,
             },
             timeout=TIMEOUT_SECONDS,
         )

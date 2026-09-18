@@ -17,10 +17,10 @@ CONNECTIONS_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "connec
 CAUSE_TRIGGERS = {
     "soil_organic_carbon": ["soil organic carbon", "soc", "low soil carbon", "poor soil carbon"],
     "land_use_monoculture": ["monoculture", "single crop", "wheat only", "mono-crop"],
-    "land_use_change": ["deforestation", "land use change", "converted forest", "cleared land"],
+    "land_use_change": ["deforest", "land use change", "converted forest", "cleared land", "cleared forest"],
     "water_availability": ["low rainfall", "low water", "drought", "water scarce", "groundwater decline", "wetland loss"],
     "agroforestry_adoption": ["agroforestry", "intercropping", "tree crop mix"],
-    "pollinator_presence": ["pollinator", "bee decline", "low pollination"],
+    "pollinator_presence": ["pollinat", "bees", "bee decline", "bee population"],
 }
 
 REQUIRED_CATEGORIES = {
@@ -39,24 +39,40 @@ def load_connections() -> list[dict]:
 
 def detect_cause(text: str, structured: dict | None = None) -> str | None:
     """Very deliberately simple keyword match — this is a guardrail-critical
-    function, not a place for a fuzzy ML classifier to introduce drift."""
-    text_l = (text or "").lower()
+    function, not a place for a fuzzy ML classifier to introduce drift.
 
-    if structured:
-        soc = structured.get("soil_organic_carbon_pct")
-        if soc is not None and soc < 0.5:
-            return "soil_organic_carbon"
-        land_use = (structured.get("land_use") or "").lower()
-        if "mono" in land_use:
-            return "land_use_monoculture"
-        rainfall = (structured.get("rainfall") or "").lower()
-        if rainfall == "low":
-            return "water_availability"
+    Priority (deliberate, user-confirmed ordering):
+      1. Free-text message triggers — the user chose those words on purpose.
+      2. The structured `land_use` field, checked against the SAME triggers
+         (it's free-ish text too, e.g. "deforestation" or "monoculture_wheat").
+      3. Remaining structured shortcuts with no natural text form (a numeric
+         soil-carbon %, or a categorical rainfall level).
+    This order means filling in the land-data panel can no longer silently
+    override what was actually typed — e.g. a deforestation story paired
+    with rainfall=low now resolves to land_use_change, not water_availability."""
+    text_l = (text or "").lower()
+    structured = structured or {}
+    land_use_l = (structured.get("land_use") or "").lower()
 
     for cause, triggers in CAUSE_TRIGGERS.items():
         for trig in triggers:
             if trig in text_l:
                 return cause
+
+    for cause, triggers in CAUSE_TRIGGERS.items():
+        for trig in triggers:
+            if trig in land_use_l:
+                return cause
+
+    soc = structured.get("soil_organic_carbon_pct")
+    if soc is not None and soc < 0.5:
+        return "soil_organic_carbon"
+    if "mono" in land_use_l:
+        return "land_use_monoculture"
+    rainfall = (structured.get("rainfall") or "").lower()
+    if rainfall == "low":
+        return "water_availability"
+
     return None
 
 

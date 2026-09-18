@@ -10,8 +10,11 @@ from typing import Optional
 
 DOMAIN_KEYWORDS = [
     "soil", "biodiversity", "land", "forest", "climate", "rainfall", "crop",
-    "water", "pollinator", "species", "habitat", "ecosystem", "carbon",
-    "deforestation", "agriculture", "farm", "region", "wetland", "pollution",
+    "water", "pollinat", "bees", "species", "habitat", "ecosystem", "carbon",
+    "deforest", "agricultur", "agroforestry", "farm", "region", "wetland",
+    "pollution", "field", "wildlife", "grazing", "livestock", "irrigation",
+    "groundwater", "drought", "monoculture", "plantation", "vegetation",
+    "grassland", "tree", "fertilizer", "pesticide",
 ]
 
 
