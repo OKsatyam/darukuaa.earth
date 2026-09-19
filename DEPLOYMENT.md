@@ -26,7 +26,7 @@ built to fail soft, so chat "just works" without cross-session memory.
    blueprint so they aren't hardcoded in git):
    - `MONGODB_URI` — from step 1
    - `ALLOWED_ORIGINS` — leave blank for now, come back after step 3
-4. Deploy. First boot will download the sentence-transformers model and
+4. Deploy. First boot will download the small ONNX embedding model and
    build the ChromaDB index (see `app/main.py`'s startup hook) — expect
    the first deploy to take a couple of minutes longer than later ones.
 5. Note the service URL, e.g. `https://darukaa-biodiversity-api.onrender.com`.

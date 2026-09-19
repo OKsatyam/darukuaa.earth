@@ -1,7 +1,8 @@
 """
 RAG knowledge layer: chunks the curated source documents (app/data/sources/*.txt),
-embeds them with sentence-transformers, and stores them in a persistent ChromaDB
-collection. Retrieval returns chunks WITH their source metadata so the API can
+embeds them with ChromaDB's built-in ONNX MiniLM embedding function, and stores
+them in a persistent ChromaDB collection. Retrieval returns chunks WITH their
+source metadata so the API can
 surface a "sources used" panel (retrieval transparency) rather than hiding the
 knowledge step inside an opaque LLM call.
 """
@@ -14,7 +15,14 @@ from app.config import settings
 
 SOURCES_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "sources")
 COLLECTION_NAME = "darukaa_knowledge"
-EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+
+# Deliberately NOT sentence-transformers here: that package pulls in full
+# PyTorch, which alone can push a process over Render's free-tier 512MB RAM
+# limit once combined with FastAPI/chromadb/etc (confirmed live — the app
+# OOM'd on startup with it). ChromaDB's built-in default embedding function
+# uses the same all-MiniLM-L6-v2 model but runs it through onnxruntime
+# instead of torch — same embedding quality, a fraction of the memory.
+_embedding_function = embedding_functions.DefaultEmbeddingFunction()
 
 
 def _chunk_text(text: str, source_file: str) -> list[dict]:
@@ -59,17 +67,14 @@ def get_chroma_client():
 def build_index(force_rebuild: bool = False):
     """Run once at startup (or via a CLI command) to (re)populate the collection."""
     client = get_chroma_client()
-    embed_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
-        model_name=EMBEDDING_MODEL
-    )
 
     existing = [c.name for c in client.list_collections()]
     if COLLECTION_NAME in existing:
         if not force_rebuild:
-            return client.get_collection(COLLECTION_NAME, embedding_function=embed_fn)
+            return client.get_collection(COLLECTION_NAME, embedding_function=_embedding_function)
         client.delete_collection(COLLECTION_NAME)
 
-    collection = client.create_collection(COLLECTION_NAME, embedding_function=embed_fn)
+    collection = client.create_collection(COLLECTION_NAME, embedding_function=_embedding_function)
 
     chunks = load_and_chunk_sources()
     if not chunks:
@@ -100,11 +105,8 @@ def retrieve(query: str, top_k: int = 3) -> list[dict]:
     """
     try:
         client = get_chroma_client()
-        embed_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
-            model_name=EMBEDDING_MODEL
-        )
         try:
-            collection = client.get_collection(COLLECTION_NAME, embedding_function=embed_fn)
+            collection = client.get_collection(COLLECTION_NAME, embedding_function=_embedding_function)
         except ValueError:
             collection = build_index()
 

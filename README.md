@@ -85,7 +85,7 @@ and still answers every message, just without cross-session memory.
 |---|---|
 | Backend | FastAPI, LangGraph (explicit state machine, not one big prompt) |
 | Reasoning source of truth | Hand-curated `connections.json` graph |
-| Retrieval | ChromaDB + sentence-transformers (local embeddings, no API needed) |
+| Retrieval | ChromaDB + its built-in ONNX MiniLM embedding function (local, no torch, no API needed) |
 | Optional narration | Groq (OpenAI-compatible API), `openai/gpt-oss-20b` |
 | Session persistence | MongoDB Atlas via Motor (async), fails soft if unset |
 | Frontend | Next.js 14 (App Router), React, TypeScript — no CSS framework, inline styles |
